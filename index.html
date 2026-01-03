@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>帰り道</title>
+<style>
+body { font-family: sans-serif; background:#111; color:#eee; padding:40px; }
+button { margin:10px; padding:10px 20px; }
+</style>
+</head>
+<body>
+
+<div id="game"></div>
+
+<script>
+const questions = [
+  ["帰り道。近道と回り道、どちらを選ぶ？", ["近道","回り道"]],
+  ["今日の夕食は何にしよう？", ["カレー","食べない"]],
+  ["横断歩道。ここの信号待ちって……", ["長いんだよなあ","車なんか来ないのに"]],
+  ["小さな公園。子どものころ好きだった遊具は？", ["ブランコ","すべり台"]],
+  ["散歩中の犬が吠えてきた。", ["びっくりした","あーあ"]],
+  ["吠えた犬の種類は？", ["マルチーズ","知らない"]],
+  ["コンビニに寄ろうか？", ["いつものとこ","別のとこ"]],
+  ["フライヤーでチキンが揚がっている。揚げたてを……", ["買う","やっぱり節約"]],
+  ["コンビニの店員さん。夜遅くまで働いて……", ["お疲れさまです","きれいな人だな"]],
+  ["買い忘れたものは？", ["コーヒー","綿棒"]],
+];
+
+let answers = [];
+let qIndex = 0;
+const game = document.getElementById("game");
+
+function showQuestion() {
+  const [text, opts] = questions[qIndex];
+  game.innerHTML = `<p>${text}</p>`;
+  opts.forEach(opt=>{
+    const b=document.createElement("button");
+    b.textContent=opt;
+    b.onclick=()=>select(opt);
+    game.appendChild(b);
+  });
+}
+
+function select(opt){
+  answers[qIndex]=opt;
+
+  // 第三層分岐トリガー（Q6後）
+  if(qIndex===5){
+    if(
+      answers[2]==="車なんか来ないのに" &&
+      answers[4]==="あーあ" &&
+      answers[5]==="マルチーズ"
+    ){
+      showSpecial();
+      return;
+    }
+  }
+
+  qIndex++;
+  if(qIndex<questions.length) showQuestion();
+  else showResult();
+}
+
+function showSpecial(){
+  game.innerHTML = "<p>早く帰りたい。</p>";
+  ["あの子のもとへ","でも……"].forEach(opt=>{
+    const b=document.createElement("button");
+    b.textContent=opt;
+    b.onclick=()=>{
+      game.innerHTML="<p>"+(
+        opt==="あの子のもとへ"
+        ? "どんなときも傍にいてくれる、賢く美しい鳥だった。"
+        : "リビングには、あの子のケージだけが残っている。"
+      )+"</p>";
+    };
+    game.appendChild(b);
+  });
+}
+
+function showResult(){
+  let result = [];
+
+  // 第一層
+  if(answers.includes("食べない")) result.push("耐えがたい空腹。");
+  else result.push("帰宅は22時を過ぎた。");
+
+  // 第二層（完全一致）
+  const A = answers.join("|");
+  const table = {
+    "回り道|カレー|長いんだよなあ|すべり台|びっくりした|マルチーズ|別のとこ|買う|お疲れさまです|コーヒー":"カレーとチキンで大満足！",
+    "回り道|カレー|長いんだよなあ|ブランコ|びっくりした|マルチーズ|別のとこ|買う|きれいな人だな|コーヒー":"おそらく恋をした。",
+    "近道|食べない|長いんだよなあ|ブランコ|あーあ|知らない|いつものとこ|買う|お疲れさまです|綿棒":"仕返しなんかしないぞ。",
+    "近道|カレー|長いんだよなあ|すべり台|あーあ|マルチーズ|別のとこ|買う|お疲れさまです|綿棒":"ようやく、ひと息つけるなあ。",
+    "回り道|食べない|車なんか来ないのに|ブランコ|あーあ|知らない|別のとこ|買う|きれいな人だな|綿棒":"大人だって、ハメを外してもいいよなあ。",
+    "近道|食べない|車なんか来ないのに|ブランコ|あーあ|知らない|別のとこ|やっぱり節約|きれいな人だな|綿棒":"綿棒って、用途が多いよなあ。"
+  };
+  if(table[A]) result.push(table[A]);
+
+  game.innerHTML = result.map(r=>`<p>${r}</p>`).join("");
+}
+
+showQuestion();
+</script>
+</body>
+</html>
