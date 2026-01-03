@@ -42,7 +42,8 @@ let flags = {
   restraint:0,
   irritation:0,
   routine:0,
-  avoidance:0
+  avoidance:0,
+  attraction:0
 };
 
 const game = document.getElementById("game");
@@ -69,7 +70,10 @@ function select(q,o){
   if(q===3 && o==="車なんか来ないのに") flags.irritation++;
   if(q===5 && o==="あーあ") flags.irritation++;
   if(q===8 && o==="やっぱり節約") flags.restraint++;
-  if(q===9 && o==="きれいな人だなあ") flags.irritation++;
+  if(q===9 && o==="きれいな人だなあ"){
+  flags.irritation++;
+  flags.attraction = 1;
+  }
 
   if(q===7 && o==="いつものとこ") flags.routine++;
   if(q===7 && o==="別のとこ") flags.avoidance++;
@@ -127,8 +131,8 @@ function showResult(){
     out.push("大人だって、ハメを外してもいいよなあ。");
   }else if(flags.restraint>=2 && flags.irritation>=2){
     out.push("仕返しなんかしないぞ。");
-  }else if(flags.restraint + flags.irritation >= 1){
-    out.push("おそらく恋をした。");
+  }else if(flags.attraction === 1){
+  out.push("おそらく恋をした。");
   }else{
     out.push("本当に？");
   }
