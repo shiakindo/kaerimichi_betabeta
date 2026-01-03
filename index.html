@@ -122,7 +122,7 @@ function showResult(){
 
   // 第二層（最大1文）
   if(flags.irritation >= 3){
-    out.push("車なんか来ないのに。あーあ。マルチーズ。");
+    out.push("まだやり直せるはずだよなあ。");
   }else if(flags.restraint>=2 && flags.irritation>=2 && flags.routine>=1){
     out.push("綿棒って、用途が多いよなあ。");
   }else if(flags.avoidance>=2 && flags.restraint>=1){
@@ -134,7 +134,7 @@ function showResult(){
   }else if(flags.attraction === 1){
   out.push("おそらく恋をした。");
   }else{
-    out.push("本当に？");
+    out.push("遊んでくれて、ありがとう。");
   }
 
   game.innerHTML = out.map(t=>`<p>${t}</p>`).join("");
@@ -145,4 +145,5 @@ showQuestion();
 
 </body>
 </html>
+
 
