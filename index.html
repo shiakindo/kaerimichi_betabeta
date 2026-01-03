@@ -4,8 +4,16 @@
 <meta charset="UTF-8">
 <title>帰り道</title>
 <style>
-body{font-family:sans-serif;background:#111;color:#eee;padding:40px}
-button{margin:10px;padding:10px 20px}
+body{
+  font-family:sans-serif;
+  background:#111;
+  color:#eee;
+  padding:40px;
+}
+button{
+  margin:10px;
+  padding:10px 20px;
+}
 </style>
 </head>
 <body>
@@ -14,72 +22,93 @@ button{margin:10px;padding:10px 20px}
 
 <script>
 const questions = {
-1:["帰り道。近道と回り道、どちらを選ぶ？",["近道","回り道"]],
-2:["今日の夕食は何にしよう？",["カレー","食べない"]],
-3:["横断歩道。ここの信号待ちって……",["長いんだよなあ","車なんか来ないのに"]],
-4:["小さな公園。子どものころ好きだった遊具は？",["ブランコ","すべり台"]],
-5:["散歩中の犬が吠えてきた。",["びっくりした","あーあ"]],
-6:["吠えた犬の種類は？",["マルチーズ","知らない"]],
-7:["コンビニに寄ろうか？", ["いつものとこ","別のとこ"]],
-8:["フライヤーでチキンが揚がっている。揚げたてを……",["買う","やっぱり節約"]],
-9:["コンビニの店員さん。夜遅くまで働いて……",["お疲れさまです","きれいな人だなあ"]],
-10:["買い忘れたものは？",["コーヒー","綿棒"]],
+  1:["帰り道。近道と回り道、どちらを選ぶ？",["近道","回り道"]],
+  2:["今日の夕食は何にしよう？",["カレー","食べない"]],
+  3:["横断歩道。ここの信号待ちって……",["長いんだよなあ","車なんか来ないのに"]],
+  4:["小さな公園。子どものころ好きだった遊具は？",["ブランコ","すべり台"]],
+  5:["散歩中の犬が吠えてきた。",["びっくりした","あーあ"]],
+  6:["吠えた犬の種類は？",["マルチーズ","知らない"]],
+  7:["コンビニに寄ろうか？",["いつものとこ","別のとこ"]],
+  8:["フライヤーでチキンが揚がっている。揚げたてを……",["買う","やっぱり節約"]],
+  9:["コンビニの店員さん。夜遅くまで働いて……",["お疲れさまです","きれいな人だなあ"]],
+  10:["買い忘れたものは？",["コーヒー","綿棒"]],
 };
 
-const order=[1,2,3,4,5,6,7,8,9,10];
-let idx=0;
-let answers={};
-const game=document.getElementById("game");
+const order = [1,2,3,4,5,6,7,8,9,10];
+let idx = 0;
+let answers = {};
+
+let flags = {
+  restraint:0,
+  irritation:0,
+  routine:0,
+  avoidance:0
+};
+
+const game = document.getElementById("game");
 
 function showQuestion(){
-  const q=order[idx];
-  const [t,opts]=questions[q];
-  game.innerHTML=`<p>${t}</p>`;
+  const q = order[idx];
+  const [text, opts] = questions[q];
+  game.innerHTML = `<p>${text}</p>`;
   opts.forEach(o=>{
-    const b=document.createElement("button");
-    b.textContent=o;
-    b.onclick=()=>select(q,o);
+    const b = document.createElement("button");
+    b.textContent = o;
+    b.onclick = ()=>select(q,o);
     game.appendChild(b);
   });
 }
 
 function select(q,o){
-  answers[q]=o;
+  answers[q] = o;
 
-  // 第三層トリガー（Q6後）
+  // flags
+  if(q===1 && o==="近道") flags.routine++;
+  if(q===1 && o==="回り道") flags.avoidance++;
+
+  if(q===3 && o==="車なんか来ないのに") flags.irritation++;
+  if(q===5 && o==="あーあ") flags.irritation++;
+  if(q===8 && o==="やっぱり節約") flags.restraint++;
+  if(q===9 && o==="きれいな人だなあ") flags.irritation++;
+
+  if(q===7 && o==="いつものとこ") flags.routine++;
+  if(q===7 && o==="別のとこ") flags.avoidance++;
+
+  // 第三層トリガー（Q6時点）
   if(q===6){
     if(
       answers[3]==="車なんか来ないのに" &&
       answers[5]==="あーあ" &&
       answers[6]==="マルチーズ"
     ){
-      showSpecial(); return;
+      showSpecial();
+      return;
     }
   }
 
   idx++;
-  if(idx<order.length) showQuestion();
+  if(idx < order.length) showQuestion();
   else showResult();
 }
 
 function showSpecial(){
-  game.innerHTML="<p>早く帰りたい。</p>";
+  game.innerHTML = "<p>早く帰りたい。</p>";
   ["あの子のもとへ","でも……"].forEach(o=>{
-    const b=document.createElement("button");
-    b.textContent=o;
-    b.onclick=()=>{
-      game.innerHTML="<p>"+(
+    const b = document.createElement("button");
+    b.textContent = o;
+    b.onclick = ()=>{
+      game.innerHTML = `<p>${
         o==="あの子のもとへ"
         ? "どんなときも傍にいてくれる、賢く美しい鳥だった。"
         : "リビングには、あの子のケージだけが残っている。"
-      )+"</p>";
+      }</p>`;
     };
     game.appendChild(b);
   });
 }
 
 function showResult(){
-  let out=[];
+  let out = [];
 
   // 第一層
   if(Object.values(answers).includes("食べない"))
@@ -87,46 +116,28 @@ function showResult(){
   else
     out.push("帰宅は22時を過ぎた。");
 
-  // 第二層（H/K/L/M）
-  const key=order.map(q=>answers[q]).join("|");
-  const table={
-  // H
-  "近道|食べない|車なんか来ないのに|すべり台|あーあ|知らない|別のとこ|やっぱり節約|きれいな人だなあ|綿棒":
-  "綿棒って、用途が多いよなあ。",
+  // 第二層（最大1文）
+  if(flags.irritation >= 3){
+    out.push("車なんか来ないのに。あーあ。マルチーズ。");
+  }else if(flags.restraint>=2 && flags.irritation>=2){
+    out.push("綿棒って、用途が多いよなあ。");
+  }else if(flags.avoidance>=2 && flags.restraint>=1){
+    out.push("明日は遠回りせず帰ろう。");
+  }else if(flags.restraint>=1 && flags.irritation>=2){
+    out.push("大人だって、ハメを外してもいいよなあ。");
+  }else if(flags.restraint>=2 && flags.irritation>=2){
+    out.push("仕返しなんかしないぞ。");
+  }else if(flags.restraint + flags.irritation >= 1){
+    out.push("おそらく恋をした。");
+  }else{
+    out.push("本当に？");
+  }
 
-  // K
-  "回り道|食べない|車なんか来ないのに|すべり台|あーあ|知らない|別のとこ|やっぱり節約|きれいな人だなあ|綿棒":
-  "明日は遠回りせず帰ろう。",
-
-  // L
-  "近道|カレー|長いんだよなあ|ブランコ|びっくりした|マルチーズ|いつものとこ|買う|お疲れさまです|コーヒー":
-  "本当に？",
-
-  // M
-  "近道|食べない|長いんだよなあ|すべり台|びっくりした|知らない|いつものとこ|やっぱり節約|お疲れさまです|綿棒":
-  "車なんか来ないのに。あーあ。マルチーズ。",
-
-  // D
-  "回り道|カレー|長いんだよなあ|ブランコ|びっくりした|マルチーズ|別のとこ|買う|きれいな人だなあ|コーヒー":
-  "おそらく恋をした。",
-
-  // E
-  "近道|食べない|長いんだよなあ|ブランコ|あーあ|知らない|いつものとこ|買う|お疲れさまです|綿棒":
-  "仕返しなんかしないぞ。",
-
-  // G
-  "回り道|食べない|車なんか来ないのに|ブランコ|あーあ|知らない|別のとこ|買う|きれいな人だなあ|綿棒":
-  "大人だって、ハメを外してもいいよなあ。"
-  };
-  if(table[key]) out.push(table[key]);
-
-  game.innerHTML=out.map(t=>`<p>${t}</p>`).join("");
+  game.innerHTML = out.map(t=>`<p>${t}</p>`).join("");
 }
 
 showQuestion();
 </script>
+
 </body>
 </html>
-
-
-
