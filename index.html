@@ -152,10 +152,7 @@ function showResult(){
   game.innerHTML = out.map(t=>`<p>${t}</p>`).join("");
 
   // ② その後に共有ボタンを追加
-  const shareText = out.join(" ― ") + "\n#二択ゲーム帰り道\n" + location.href;
-
-  const shareBtn = document.createElement("button");
-  shareBtn.textContent = "Xで共有";
+ const shareText = out.join(" / ") + "\n#二択ゲーム帰り道\n";
 
   shareBtn.onclick = ()=>{
     if(navigator.share){
@@ -165,8 +162,9 @@ function showResult(){
         url: location.href
       });
     }else{
-      const url = "https://twitter.com/intent/tweet?text="
-        + encodeURIComponent(shareText);
+      const url =
+        "https://twitter.com/intent/tweet?text="
+        + encodeURIComponent(shareText + "\n" + location.href);
       window.open(url, "_blank");
     }
   };
@@ -181,6 +179,7 @@ showQuestion();
 
 </body>
 </html>
+
 
 
 
