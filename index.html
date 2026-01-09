@@ -149,21 +149,6 @@ function showResult(){
 }
 
   game.innerHTML = out.map(t=>`<p>${t}</p>`).join("");
-  
-try{
-  const shareText = out.join(" / ") + "\n#帰り道\n" + location.href;
-  const shareBtn = document.createElement("button");
-  shareBtn.textContent = "結果を共有する";
-  shareBtn.onclick = function(){
-    window.open(
-      "https://twitter.com/intent/tweet?text=" +
-      encodeURIComponent(shareText),
-      "_blank"
-    );
-  };
-  game.appendChild(shareBtn);
-}catch(e){
-  console.log(e);
 }
 
 showQuestion();
@@ -171,6 +156,7 @@ showQuestion();
 
 </body>
 </html>
+
 
 
 
