@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
+<head meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
 <title>帰り道</title>
 <style>
@@ -8,11 +8,16 @@ body{
   font-family:sans-serif;
   background:#111;
   color:#eee;
-  padding:40px;
+  padding:clamp(16px, 5vw, 40px);
+  font-size:clamp(14px, 4vw, 18px);
 }
 button{
-  margin:10px;
-  padding:10px 20px;
+  margin:8px;
+  padding:12px 16px;
+  font-size:1em;
+}
+#game{
+  max-width:600px;
 }
 </style>
 </head>
@@ -166,6 +171,7 @@ showQuestion();
 
 </body>
 </html>
+
 
 
 
