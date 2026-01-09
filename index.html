@@ -140,30 +140,26 @@ function showResult(){
   out.push("おそらく恋をした。");
   }else{
     out.push("遊んでくれて、ありがとう。");
-
-  const shareText = out.join(" / ") + "\n#帰り道\n" + location.href;
-
-  const shareBtn = document.createElement("button");
-  shareBtn.textContent = "結果をシェアする";
-
-  shareBtn.onclick = ()=>{
-    if(navigator.share){
-      navigator.share({
-        title: "帰り道",
-        text: shareText,
-        url: location.href
-      });
-    }else{
-      const url = "https://twitter.com/intent/tweet?text="
-        + encodeURIComponent(shareText);
-      window.open(url, "_blank");
-    }
-  };
+};
 
   game.appendChild(shareBtn);
 }
 
   game.innerHTML = out.map(t=>`<p>${t}</p>`).join("");
+  
+  const shareText = out.join(" / ") + "\n#帰り道\n" + location.href;
+
+  const shareBtn = document.createElement("button");
+  shareBtn.textContent = "結果を共有する";
+
+  shareBtn.onclick = ()=>{
+    const url =
+      "https://twitter.com/intent/tweet?text=" +
+      encodeURIComponent(shareText);
+    window.open(url, "_blank");
+};
+
+game.appendChild(shareBtn);
 }
 
 showQuestion();
@@ -171,6 +167,7 @@ showQuestion();
 
 </body>
 </html>
+
 
 
 
