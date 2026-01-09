@@ -154,6 +154,10 @@ function showResult(){
   // ② その後に共有ボタンを追加
  const shareText = out.join(" / ") + "\n#二択ゲーム帰り道\n";
 
+  const shareBtn = document.createElement("button");
+  shareBtn.textContent = "Xで共有";
+  shareBtn.className = "share";
+  
   shareBtn.onclick = ()=>{
     if(navigator.share){
       navigator.share({
@@ -179,6 +183,7 @@ showQuestion();
 
 </body>
 </html>
+
 
 
 
