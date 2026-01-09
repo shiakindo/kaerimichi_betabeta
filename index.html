@@ -168,9 +168,8 @@ function showResult(){
   };
 
   game.appendChild(shareBtn);
-}
-
-  game.innerHTML = out.map(t=>`<p>${t}</p>`).join("");
+  shareBtn.style.background = "#eee";
+  shareBtn.style.color = "#111";
 }
 
 showQuestion();
@@ -178,6 +177,7 @@ showQuestion();
 
 </body>
 </html>
+
 
 
 
