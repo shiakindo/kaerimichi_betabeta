@@ -127,7 +127,7 @@ function showResult(){
   else
     out.push("帰宅は22時を過ぎた。");
 
-  // 第二層（最大1文）
+  // 第二層
   if(flags.irritation >= 3){
     out.push("まだやり直せるはずだよなあ。");
   }else if(flags.restraint>=2 && flags.irritation>=2 && flags.routine>=1){
@@ -139,10 +139,15 @@ function showResult(){
   }else if(flags.restraint>=2 && flags.irritation>=2){
     out.push("仕返しなんかしないぞ。");
   }else if(flags.attraction === 1){
-  out.push("おそらく恋をした。");
+    out.push("おそらく恋をした。");
   }else{
     out.push("遊んでくれて、ありがとう。");
+  }
 
+  // ① まず結果文を描画
+  game.innerHTML = out.map(t=>`<p>${t}</p>`).join("");
+
+  // ② その後に共有ボタンを追加
   const shareText = out.join(" / ") + "\n#帰り道\n" + location.href;
 
   const shareBtn = document.createElement("button");
@@ -173,5 +178,6 @@ showQuestion();
 
 </body>
 </html>
+
 
 
